@@ -5,6 +5,7 @@ import Chatbar from './Chatbar.jsx';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.sendMsg = this.sendMsg.bind(this);
     this.state = {  
       currentUser: {name: "Bob"},
         messages: [
@@ -34,6 +35,18 @@ class App extends Component {
     }
 
 
+
+    sendMsg(event) {
+      if(event.keyCode === 13) {
+        console.log("key pressed", event.target.value);
+        event.preventDefault();
+        const newMessage = {id: 0, username: this.state.currentUser.name, content: event.target.value}
+        const messages = this.state.messages.concat(newMessage)
+        this.setState({messages: messages});
+      }
+    }
+
+
   render() {
     return (
       <div>
@@ -44,7 +57,8 @@ class App extends Component {
         messages={this.state.messages}
         />
         <Chatbar 
-          currentUser={this.state.currentUser.name} 
+          currentUser={this.state.currentUser.name}
+          sendMsg={this.sendMsg} 
          />
       </div>
     );

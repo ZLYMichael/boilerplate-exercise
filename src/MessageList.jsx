@@ -6,9 +6,9 @@ render () {
   return (
     <div> 
     <main className="messages">
-      {this.props.messages.map((msg) => {
+      {this.props.messages.map((msg, i) => {
       return (
-        <Message key={msg.id} username={msg.username} content={msg.content} />
+        <Message key={i} username={msg.username} content={msg.content} />
       );
     })
   }
