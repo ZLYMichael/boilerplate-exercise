@@ -7,10 +7,7 @@ class App extends Component {
     super(props);
     this.socket = new WebSocket('ws://localhost:3001/')
     this.sendMsg = this.sendMsg.bind(this);
-    this.state = {  
-      currentUser: {name: "Bob"},
-        messages: []
-      }
+    this.changeName = this.changeName.bind(this);
     this.socket.onmessage = (event) => {
       console.log(event.data)
       const newMessage = JSON.parse(event.data);
@@ -19,6 +16,11 @@ class App extends Component {
     }
   } //end of constructor
 
+  state = {  
+      currentUser: {name: "Bob"},
+      messages: []
+      };
+   
     // componentDidMount() {
     //   console.log("componentDidMount <App />");
     //   setTimeout(() => {
@@ -32,14 +34,25 @@ class App extends Component {
     //   }, 3000);
     // }
 
-
+  componentDidMount() {
+    this.setState({
+      currentUser: {name: "Bob"},
+      messages: []
+    });
+  }
   sendMsg(content) {
     console.log("key pressed", content);
     event.preventDefault();
     const newMessage = {id: null, username: this.state.currentUser.name, content: content}
     this.socket.send(JSON.stringify(newMessage));
   }
-  
+
+  changeName(names) {
+    this.setState({currentUser: {
+      name: names
+    }});
+    console.log(names)
+  }
 
 
 
@@ -54,8 +67,9 @@ class App extends Component {
         messages={this.state.messages}
         />
         <Chatbar 
-          currentUser={this.state.currentUser.name}
+          currentUser={this.state}
           sendMsg={this.sendMsg} 
+          changeName={this.changeName}
          />
       </div>
     );
