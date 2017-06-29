@@ -9,18 +9,15 @@ class App extends Component {
     this.sendMsg = this.sendMsg.bind(this);
     this.state = {  
       currentUser: {name: "Bob"},
-        messages: [
-          { id: 1,
-            username: "Bob",
-            content: "Has anyone seen my marbles?",
-          },
-          { id: 2,
-            username: "Anonymous",
-            content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-          }
-        ]
+        messages: []
       }
-    } //end of constructor
+    this.socket.onmessage = (event) => {
+      console.log(event.data)
+      const newMessage = JSON.parse(event.data);
+      const messages = this.state.messages.concat(newMessage)
+      this.setState({messages: messages});
+    }
+  } //end of constructor
 
     // componentDidMount() {
     //   console.log("componentDidMount <App />");
@@ -36,14 +33,14 @@ class App extends Component {
     // }
 
 
-      sendMsg(content) {
-          console.log("key pressed", content);
-          event.preventDefault();
-          const newMessage = {id: 0, username: this.state.currentUser.name, content: content}
-          const messages = this.state.messages.concat(newMessage)
-          this.socket.send(JSON.stringify(newMessage));
-          this.setState({messages: messages});
-      }
+  sendMsg(content) {
+    console.log("key pressed", content);
+    event.preventDefault();
+    const newMessage = {id: null, username: this.state.currentUser.name, content: content}
+    this.socket.send(JSON.stringify(newMessage));
+  }
+  
+
 
 
   render() {
