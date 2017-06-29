@@ -16,7 +16,10 @@ class Chatbar extends Component {
   }
   
   nameChange(event) {
-      this.props.changeName(event.target.value);
+    if(event.keyCode === 13) {
+      const newName = event.target.value;
+      this.props.changeName(newName);
+    }
   }
 
   updateText(event) {

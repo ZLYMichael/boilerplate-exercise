@@ -47,11 +47,14 @@ class App extends Component {
     this.socket.send(JSON.stringify(newMessage));
   }
 
-  changeName(names) {
+  changeName(newName) {
+    const originalName = this.state.currentUser.name;
     this.setState({currentUser: {
-      name: names
+      name: newName
     }});
-    console.log(names)
+    this.socket.send(JSON.stringify(
+    {"type": "postNotification", "content": `${originalName} changed their name to ${newName}`}
+    ))
   }
 
 
@@ -67,7 +70,7 @@ class App extends Component {
         messages={this.state.messages}
         />
         <Chatbar 
-          currentUser={this.state}
+          currentUser={this.state.currentUser}
           sendMsg={this.sendMsg} 
           changeName={this.changeName}
          />
