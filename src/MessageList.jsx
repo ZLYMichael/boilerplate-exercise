@@ -8,7 +8,7 @@ render () {
     <main className="messages">
       {this.props.messages.map((msg, i) => {
       return (
-        <Message key={i} username={msg.username} content={msg.content} />
+        <Message type={msg.type} key={i} username={msg.username} content={msg.content} />
       );
     })
   }

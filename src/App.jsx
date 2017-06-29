@@ -43,7 +43,7 @@ class App extends Component {
   sendMsg(content) {
     console.log("key pressed", content);
     event.preventDefault();
-    const newMessage = {id: null, username: this.state.currentUser.name, content: content}
+    const newMessage = {type: "postMessage", username: this.state.currentUser.name, content: content}
     this.socket.send(JSON.stringify(newMessage));
   }
 
@@ -53,7 +53,7 @@ class App extends Component {
       name: newName
     }});
     this.socket.send(JSON.stringify(
-    {"type": "postNotification", "content": `${originalName} changed their name to ${newName}`}
+      {type: "postNotification", content: `${originalName} changed their name to ${newName}`}
     ))
   }
 
@@ -67,6 +67,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList 
+        currentUser={this.state.currentUser}
         messages={this.state.messages}
         />
         <Chatbar 
