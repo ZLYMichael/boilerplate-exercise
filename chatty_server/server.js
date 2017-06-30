@@ -14,6 +14,13 @@ const server = express()
 
 // Create the WebSockets server
 const wss = new SocketServer({ server });
+const updatedUsrCount = () => {
+  const currentUserCount = wss.clients.size
+  return {
+    type: "userCount",
+    count: currentUserCount
+  }
+}
 
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
@@ -28,6 +35,9 @@ wss.broadcast = function broadcast(data) {
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
+  const countMessage = updatedUsrCount();
+
+  wss.broadcast(JSON.stringify(countMessage));
     ws.on('message', (message) => {
       const recievedMsg = JSON.parse(message);
       recievedMsg.id = uuidv1();
@@ -38,8 +48,13 @@ wss.on('connection', (ws) => {
       if(recievedMsg.type === "postNotification") {
         recievedMsg.type = "incomingNotification"
       wss.broadcast(JSON.stringify(recievedMsg));
-      }
+    }
+      
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    const countMessage = updatedUsrCount();
+    wss.broadcast(JSON.stringify(countMessage));
+    console.log('Client disconnected')
+  })
 });

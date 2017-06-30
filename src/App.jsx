@@ -11,14 +11,20 @@ class App extends Component {
     this.socket.onmessage = (event) => {
       console.log(event.data)
       const newMessage = JSON.parse(event.data);
-      const messages = this.state.messages.concat(newMessage)
-      this.setState({messages: messages});
+      if(newMessage.type === 'userCount') {
+        console.log("incoming User count: ", newMessage.count)
+        this.setState({userCount: newMessage.count})
+      } else {
+        const messages = this.state.messages.concat(newMessage)
+        this.setState({messages: messages});
+      }
     }
   } //end of constructor
 
   state = {  
       currentUser: {name: "Bob"},
-      messages: []
+      messages: [],
+      userCount: 0
       };
    
     // componentDidMount() {
@@ -64,6 +70,7 @@ class App extends Component {
     return (
       <div>
         <nav className="navbar">
+          <span> {this.state.userCount} Users Online </span>
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList 
