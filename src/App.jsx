@@ -12,8 +12,10 @@ class App extends Component {
       console.log(event.data)
       const newMessage = JSON.parse(event.data);
       if(newMessage.type === 'userCount') {
-        console.log("incoming User count: ", newMessage.count)
-        this.setState({userCount: newMessage.count})
+        console.log("incoming User count: ", newMessage.count, this.state.currentUser)
+        this.setState({
+          userCount: newMessage.count})
+          console.log(this.state.currentUser.name)
       } else {
         const messages = this.state.messages.concat(newMessage)
         this.setState({messages: messages});
@@ -22,9 +24,9 @@ class App extends Component {
   } //end of constructor
 
   state = {  
-      currentUser: {name: "Bob"},
+      currentUser: {name: "Anon", color: ""},
       messages: [],
-      userCount: 0
+      userCount: 0,
       };
    
     // componentDidMount() {
@@ -42,13 +44,12 @@ class App extends Component {
 
   componentDidMount() {
     this.setState({
-      currentUser: {name: "Bob"},
+      currentUser: {name: "Anon" },
       messages: []
     });
   }
   sendMsg(content) {
     console.log("key pressed", content);
-    event.preventDefault();
     const newMessage = {type: "postMessage", username: this.state.currentUser.name, content: content}
     this.socket.send(JSON.stringify(newMessage));
   }
@@ -56,7 +57,7 @@ class App extends Component {
   changeName(newName) {
     const originalName = this.state.currentUser.name;
     this.setState({currentUser: {
-      name: newName
+      name: newName,
     }});
     this.socket.send(JSON.stringify(
       {type: "postNotification", content: `${originalName} changed their name to ${newName}`}
@@ -64,9 +65,7 @@ class App extends Component {
   }
 
 
-
   render() {
-    console.log(this.state.messages);
     return (
       <div>
         <nav className="navbar">
@@ -74,7 +73,6 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList 
-        currentUser={this.state.currentUser}
         messages={this.state.messages}
         />
         <Chatbar 

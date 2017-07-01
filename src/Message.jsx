@@ -1,15 +1,21 @@
 import React, {Component} from 'react'
 
 class Message extends Component {
-//if else statement here
+//seperates by type
 
 render () {
+  console.log(this.props.color)
+  const uniqueColor = {
+    color: this.props.color
+  }
+  
+  console.log(uniqueColor);
   let message;
   if(this.props.type === "incomingMessage") {
     console.log("incomingMessage")
     message = (
       <div className="message">
-        <span className="message-username">{this.props.username}</span>
+        <span style={uniqueColor} className="message-username">{this.props.username}</span>
         <span className="message-content"> {this.props.content}</span>
       </div>)
   } 
